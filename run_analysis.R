@@ -48,19 +48,16 @@ cData <- cbind(SubjectsCombined, LabelsCombined, MeasurementCombined)
 cData[,2] <- activity_labels$V2[cData[,2]]
 
 #assign descriptive variable names to the observations - Subject and Activity to the first two columns
-#for the rest some clean ups need to be done and descriptive names 
 #change the 't' and 'f' to 'time' and 'frequency' and some clean ups
-#brute force below, not very elegant
+
 extract_mean_std_names <- gsub("^f", "frequency", extract_mean_std_names)
 extract_mean_std_names <- gsub("^t", "time", extract_mean_std_names)
-extract_mean_std_names <- gsub("\\(\\)", "", extract_mean_std_names)
-extract_mean_std_names <- gsub("-.*", "", extract_mean_std_names)
 
 #assign the descriptive names
 colnames(cData) <- c("Subject", "Activity", extract_mean_std_names)
 
 #create a second tidy data set with average 
-#use melt with ID variables to be Activity and Subject 
+#use melt with ID variables to be Activity and Subject (forms unique ID variable combination)
 cDatamelted <- melt(cData, id.vars=c("Subject", "Activity"))
 #apply dcast to create the format required for the 2nd data set
 cData.new <- dcast(cDatamelted, Subject+Activity~variable, mean)
